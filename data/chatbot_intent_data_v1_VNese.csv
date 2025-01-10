@@ -1,4 +1,4 @@
-text,intent
+label,input_ids
 "Vâng, tôi muốn cho bạn xem bức tranh.",Đồng ý
 "Không, tôi không muốn.",Từ chối
 "Tôi không biết.",Không chắc chắn
