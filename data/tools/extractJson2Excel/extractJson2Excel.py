@@ -67,7 +67,7 @@ def process_response(row):
 def main():
     # Define the base paths
     SCRIPTS_FOLDER = Path(__file__).parent
-    INPUT_FILE = SCRIPTS_FOLDER / 'output_data_v2.xlsx'
+    INPUT_FILE = SCRIPTS_FOLDER / 'dang3.xlsx'
     OUTPUT_FILE = SCRIPTS_FOLDER / 'processed.xlsx'
 
     # Validate input file
