@@ -67,8 +67,8 @@ def process_response(row):
 def main():
     # Define the base paths
     SCRIPTS_FOLDER = Path(__file__).parent
-    INPUT_FILE = SCRIPTS_FOLDER / 'preprocess_TEACHING.xlsx'
-    OUTPUT_FILE = SCRIPTS_FOLDER / 'processed_TEACHING.xlsx'
+    INPUT_FILE = SCRIPTS_FOLDER / 'preprocess_TEST.xlsx'
+    OUTPUT_FILE = SCRIPTS_FOLDER / 'processed_TEST.xlsx'
 
     # Validate input file
     if not INPUT_FILE.exists():
