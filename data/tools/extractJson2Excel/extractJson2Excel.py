@@ -49,9 +49,9 @@ def process_response(row):
         for item in response:
             if isinstance(item, dict):
                 processed.append({
-                    'question': item.get('question', ''),
-                    'answer': item.get('answer', ''),
-                    'intent': item.get('intent', '')
+                    'robot': item.get('robot', ''),
+                    'user_answer': item.get('user_answer', ''),
+                    'user_intent': item.get('user_intent', '')
                 })
         
         return processed
@@ -67,8 +67,8 @@ def process_response(row):
 def main():
     # Define the base paths
     SCRIPTS_FOLDER = Path(__file__).parent
-    INPUT_FILE = SCRIPTS_FOLDER / 'dang3.xlsx'
-    OUTPUT_FILE = SCRIPTS_FOLDER / 'processed.xlsx'
+    INPUT_FILE = SCRIPTS_FOLDER / 'preprocess_TEACHING.xlsx'
+    OUTPUT_FILE = SCRIPTS_FOLDER / 'processed_TEACHING.xlsx'
 
     # Validate input file
     if not INPUT_FILE.exists():
