@@ -3,6 +3,11 @@ import pandas as pd
 from datasets import Dataset
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer
 from sklearn.metrics import accuracy_score, f1_score
+import psutil
+import os
+import GPUtil
+from threading import Thread
+import time
 
 # Kiểm tra CUDA
 print("CUDA available:", torch.cuda.is_available())
@@ -68,7 +73,7 @@ training_args = TrainingArguments(
     learning_rate=5e-5,
     per_device_train_batch_size=64,
     per_device_eval_batch_size=64,
-    num_train_epochs=1,
+    num_train_epochs=10,
     weight_decay=0.01,
     logging_dir="./logs",
     logging_steps=10,
@@ -95,6 +100,30 @@ trainer = Trainer(
     tokenizer=tokenizer,
     compute_metrics=compute_metrics
 )
+
+def monitor_resources():
+    """Hàm theo dõi tài nguyên hệ thống"""
+    while True:
+        # RAM Usage
+        ram = psutil.virtual_memory()
+        print(f"\nRAM Usage: {ram.percent}%")
+        print(f"Used RAM: {ram.used/1024/1024/1024:.2f}GB")
+        print(f"Available RAM: {ram.available/1024/1024/1024:.2f}GB")
+        
+        # GPU Usage (nếu có CUDA)
+        if torch.cuda.is_available():
+            gpus = GPUtil.getGPUs()
+            for gpu in gpus:
+                print(f"GPU {gpu.id} Memory Usage: {gpu.memoryUsed}MB/{gpu.memoryTotal}MB ({gpu.memoryUtil*100:.1f}%)")
+        
+        time.sleep(5)  # Cập nhật mỗi 5 giây
+
+# Khởi động thread monitor
+monitor_thread = Thread(target=monitor_resources, daemon=True)
+monitor_thread.start()
+
+# Thêm vào trước khi bắt đầu training
+print("Starting training...")
 
 trainer.train()
 
