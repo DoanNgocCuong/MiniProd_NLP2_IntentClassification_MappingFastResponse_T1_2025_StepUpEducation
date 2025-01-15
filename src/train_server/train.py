@@ -116,7 +116,7 @@ def monitor_resources():
             for gpu in gpus:
                 print(f"GPU {gpu.id} Memory Usage: {gpu.memoryUsed}MB/{gpu.memoryTotal}MB ({gpu.memoryUtil*100:.1f}%)")
         
-        time.sleep(5)  # Cập nhật mỗi 5 giây
+        time.sleep(30)  # Cập nhật mỗi 30 giây
 
 # Khởi động thread monitor
 monitor_thread = Thread(target=monitor_resources, daemon=True)
