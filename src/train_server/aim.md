@@ -1,0 +1,2 @@
+- Acc >95% 
+- Response time < 0.05s = 50 milliseconds (ms)

@@ -8,6 +8,7 @@ import os
 import GPUtil
 from threading import Thread
 import time
+from sklearn.model_selection import train_test_split
 
 # Kiểm tra CUDA
 print("CUDA available:", torch.cuda.is_available())
@@ -18,14 +19,11 @@ if torch.cuda.is_available():
 # 1. Chuẩn bị dữ liệu
 def prepare_dataset(file_path, text_columns, label_column, tokenizer, max_seq_length):
     """
-    Chuẩn bị dữ liệu từ file Excel.
-    - Ghép câu `robot` và `user_answer` thành input
-    - Tokenize dữ liệu.
+    Chuẩn bị dữ liệu từ file Excel và chia thành train/valid.
     """
     # Đọc dữ liệu
     df = pd.read_excel(file_path)
-
-
+    
     # Ghép văn bản
     def combine_text(row):
         question = row[text_columns[0]].strip().lower()
@@ -39,18 +37,26 @@ def prepare_dataset(file_path, text_columns, label_column, tokenizer, max_seq_le
     label2id = {label: idx for idx, label in enumerate(unique_labels)}
     df["label"] = df[label_column].map(label2id)
 
-    # Tokenize
-    tokenized_data = tokenizer(
-        list(df["input_text"]),
-        truncation=True,
-        padding=True,
-        max_length=max_seq_length
-    )
-    tokenized_data["labels"] = list(df["label"])
+    # Chia train/valid
+    train_df, valid_df = train_test_split(df, test_size=0.25, random_state=42, stratify=df["label"])
+    print(f"Training samples: {len(train_df)}, Validation samples: {len(valid_df)}")
 
-    # Chuyển thành HuggingFace Dataset
-    dataset = Dataset.from_dict(tokenized_data)
-    return dataset, label2id
+    # Function để tokenize DataFrame
+    def tokenize_df(df):
+        tokenized_data = tokenizer(
+            list(df["input_text"]),
+            truncation=True,
+            padding=True,
+            max_length=max_seq_length
+        )
+        tokenized_data["labels"] = list(df["label"])
+        return Dataset.from_dict(tokenized_data)
+
+    # Tokenize cả train và valid
+    train_dataset = tokenize_df(train_df)
+    valid_dataset = tokenize_df(valid_df)
+
+    return train_dataset, valid_dataset, label2id
 
 # Cấu hình
 file_path = "processed_data_example_v4_15000Data.xlsx"  # Đường dẫn file dữ liệu
@@ -60,7 +66,7 @@ max_seq_length = 128
 tokenizer = AutoTokenizer.from_pretrained("xlm-roberta-base")
 
 # Chuẩn bị dataset
-train_dataset, label2id = prepare_dataset(file_path, text_columns, label_column, tokenizer, max_seq_length)
+train_dataset, valid_dataset, label2id = prepare_dataset(file_path, text_columns, label_column, tokenizer, max_seq_length)
 print(f"Label mapping: {label2id}")
 
 # 2. Huấn luyện mô hình
@@ -96,8 +102,7 @@ trainer = Trainer(
     model=model,
     args=training_args,
     train_dataset=train_dataset,
-    eval_dataset=train_dataset,  # Thay bằng valid_dataset nếu có
-    tokenizer=tokenizer,
+    eval_dataset=valid_dataset,  # Thay bằng valid_dataset thay vì dùng train_dataset
     compute_metrics=compute_metrics
 )
 
@@ -130,7 +135,7 @@ trainer.train()
 # 3. Đánh giá trên tập test
 def evaluate_model(test_file_path):
     """Đánh giá mô hình trên tập test."""
-    test_dataset, _ = prepare_dataset(test_file_path, text_columns, label_column, tokenizer, max_seq_length)
+    test_dataset, _, _ = prepare_dataset(test_file_path, text_columns, label_column, tokenizer, max_seq_length)
     results = trainer.predict(test_dataset)
 
     print("Metrics:", results.metrics)
