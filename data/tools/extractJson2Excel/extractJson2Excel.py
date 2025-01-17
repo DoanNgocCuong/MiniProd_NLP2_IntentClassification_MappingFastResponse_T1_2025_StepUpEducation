@@ -44,15 +44,14 @@ def process_response(row):
         if not isinstance(response, list):
             response = [response]
         
-        # Extract relevant fields
+        # Extract all fields
         processed = []
         for item in response:
             if isinstance(item, dict):
-                processed.append({
-                    'robot': item.get('robot', ''),
-                    'user_answer': item.get('user_answer', ''),
-                    'user_intent': item.get('user_intent', '')
-                })
+                # Add all fields from the dictionary
+                processed.append(item)
+            else:
+                logger.warning(f"Skipping non-dictionary item: {item}")
         
         return processed
     except (json.JSONDecodeError, TypeError) as e:
@@ -67,8 +66,8 @@ def process_response(row):
 def main():
     # Define the base paths
     SCRIPTS_FOLDER = Path(__file__).parent
-    INPUT_FILE = SCRIPTS_FOLDER / 'preprocess_dang1new.xlsx'
-    OUTPUT_FILE = SCRIPTS_FOLDER / 'processed_dang1new.xlsx'
+    INPUT_FILE = SCRIPTS_FOLDER / 'preprocess_dang3new.xlsx'
+    OUTPUT_FILE = SCRIPTS_FOLDER / 'processed_dang3new.xlsx'
 
     # Validate input file
     if not INPUT_FILE.exists():
