@@ -1,5 +1,11 @@
 services:
   fastapi:
     build: .
+    container_name: deploy_FastResponseIntention  # Đặt tên cho container
     ports:
-      - "25041:25041"
+      - "25041:25041"  # Map cổng 25041 của host và container
+    volumes:
+      - ./results:/app/results  # Ánh xạ thư mục chứa mô hình
+    environment:
+      MODEL_PATH: "./results/checkpoint-1288"  # Truyền biến môi trường nếu cần
+    restart: always  # Tự động khởi động lại container khi có lỗi
