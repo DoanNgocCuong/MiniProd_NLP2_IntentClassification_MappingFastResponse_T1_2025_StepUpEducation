@@ -11,7 +11,7 @@ source .venv/bin/activate
 pip install torch transformers datasets pandas scikit-learn openpyxl
 pip install 'accelerate>=0.26.0'
 pip install psutil gputil
-
+pip install fastapi uvicorn
 # Lưu danh sách package đã cài (Save installed packages list)
 pip freeze > requirements.txt
 
