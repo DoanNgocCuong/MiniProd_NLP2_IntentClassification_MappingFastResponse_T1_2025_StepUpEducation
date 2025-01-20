@@ -5,7 +5,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import time
 
 # Configuration
-model_path = "./results/checkpoint-1288"  # Replace xxx with specific checkpoint number
+model_path = "./results/v5_trainsets_checkpoint-140_XLMRoBERTa_10eps"  # Replace xxx with specific checkpoint number
 tokenizer = AutoTokenizer.from_pretrained("xlm-roberta-base")
 model = AutoModelForSequenceClassification.from_pretrained(model_path)
 
@@ -25,6 +25,7 @@ class OutputData(BaseModel):
     user_intent: str
     confidence_score: float
     response_time_ms: float
+    fast_response: str
 
 # Function to prepare data
 def prepare_input(robot: str, user_answer: str):
@@ -40,6 +41,26 @@ label2id = {
     'intent_positive': 4,
     'silence': 5
 }
+
+def intent_to_fast_response(user_intent: str) -> str:
+    """
+    Trả về phản hồi nhanh tương ứng với user_intent.
+    
+    :param user_intent: Ý định của người dùng
+    :return: Phản hồi nhanh tương ứng
+    """
+    # Mapping giữa user_intent và fast_response
+    intent_responses = {
+        'intent_positive': "À há",
+        'intent_negative': "Ra là vậy",
+        'intent_neutral': "Tớ hiểu rồi",
+        'intent_learn_more': "Để xem nào",
+        'intent_fallback': "Cậu chắc chứ?",
+        'cant_hear': "Cậu còn ở đó không? Tớ vẫn đợi cậu nói nè"
+    }
+    
+    return intent_responses.get(user_intent, "Phản hồi không xác định")
+
 
 # API endpoint
 @app.post("/predict", response_model=OutputData)
@@ -68,7 +89,11 @@ def predict(data: InputData):
     # Convert predicted label to label name
     user_intent = [k for k, v in label2id.items() if v == predictions][0]
 
-    return OutputData(user_intent=user_intent, confidence_score=confidence_score, response_time_ms=response_time_ms)
+    # Lấy phản hồi nhanh từ mapping
+    fast_response = intent_to_fast_response(user_intent)
+
+    return OutputData(user_intent=user_intent, confidence_score=confidence_score, response_time_ms=response_time_ms, fast_response=fast_response)
+
 
 # Run server
 # To run the server, use the following command in the terminal:

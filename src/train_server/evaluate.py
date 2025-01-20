@@ -7,12 +7,14 @@ from sklearn.model_selection import train_test_split
 import time
 
 # Cấu hình
-model_path = "results/checkpoint-1288"  # Thay xxx bằng số checkpoint cụ thể, ví dụ checkpoint-500
-file_path = "test1_processed_TEST_500to1000Phrase.xlsx"
+model_path = "deployAPI_server/results/checkpoint-1720_v6data"  # Thay xxx bằng số checkpoint cụ thể, ví dụ checkpoint-500
+file_path = "test2_processed_benchmark_1000data123new.xlsx"
+
 text_columns = ["robot", "user_answer"]
 label_column = "user_intent"
 max_seq_length = 128
-
+print(f"Model path: {model_path}")
+print(f"File path: {file_path}")
 # Load tokenizer và model đã train
 tokenizer = AutoTokenizer.from_pretrained("xlm-roberta-base")
 model = AutoModelForSequenceClassification.from_pretrained(model_path)
@@ -32,10 +34,29 @@ def prepare_dataset(file_path, text_columns, label_column, tokenizer, max_seq_le
 
     df["input_text"] = df.apply(combine_text, axis=1)
 
-    # Chuyển đổi nhãn thành số
-    unique_labels = sorted(df[label_column].unique())
-    label2id = {label: idx for idx, label in enumerate(unique_labels)}
-    df["label"] = df[label_column].map(label2id)
+    # # Chuyển đổi nhãn thành số
+    # unique_labels = sorted(df[label_column].unique())
+    # label2id = {label: idx for idx, label in enumerate(unique_labels)}
+    # Sử dụng nhãn đã định nghĩa sẵn
+    # label2id = {
+    #     'intent_fallback': 0,
+    #     'intent_learn_more': 1,
+    #     'intent_negative': 2,
+    #     'intent_neutral': 3,
+    #     'intent_positive': 4,
+    #     'silence': 5
+    # }
+    # or user_intent_fallback, user_intent_learn_more, user_intent_negative, user_intent_neutral, user_intent_positive, user_intent_silence
+    label2id = {
+        'user_intent_fallback': 0,
+        'user_intent_learn_more': 1,
+        'user_intent_negative': 2,
+        'user_intent_neutral': 3,
+        'user_intent_positive': 4,
+        'user_intent_silence': 5
+    }    
+    
+    df["label"] = df[label_column].map(label2id)    
 
     # Function để tokenize DataFrame
     def tokenize_df(df):
@@ -112,7 +133,7 @@ original_df["is_True"] = original_df["predicted_label_name"] == original_df[labe
 original_df["response_time_ms"] = response_times
 
 # Lưu kết quả ra file
-output_file = "evaluation_results.xlsx"
+output_file = f"evaluationResults.xlsx"
 original_df.to_excel(output_file, index=False)
 print(f"\nTest results saved to {output_file}")
 
