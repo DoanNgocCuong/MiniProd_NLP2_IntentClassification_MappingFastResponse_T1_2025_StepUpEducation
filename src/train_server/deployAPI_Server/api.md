@@ -18,3 +18,14 @@ response
 ```
 
 ---
+
+Fast Response API
+
+```bash
+{
+    "user_intent": "intent_neutral",
+    "confidence_score": 0.9987601041793823,
+    "response_time_ms": 9883.742332458496,
+    "fast_response": "I’ll just double-check for a moment!"
+}
+```

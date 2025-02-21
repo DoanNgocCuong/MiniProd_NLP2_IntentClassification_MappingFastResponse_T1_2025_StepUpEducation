@@ -3,3 +3,12 @@
 src/Chat Playground - OpenAI API_files/
 
 src/Chat Playground - OpenAI API.html
+
+*trained_models/
+*logs/
+
+
+*pycache/
+*__pycache__/
+*venv/
+*.venv/
