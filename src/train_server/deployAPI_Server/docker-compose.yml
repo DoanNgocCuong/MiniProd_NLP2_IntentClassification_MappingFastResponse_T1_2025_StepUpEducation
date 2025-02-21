@@ -5,7 +5,7 @@ services:
     ports:
       - "25041:25041"  # Map cổng 25041 của host và container
     volumes:
-      - ./results:/app/results  # Ánh xạ thư mục chứa mô hình
+      - ./trained_models:/app/trained_models  # Ánh xạ thư mục chứa mô hình
     environment:
-      MODEL_PATH: "./trained_models/checkpoint-1288"  # Truyền biến môi trường nếu cần
+      MODEL_PATH: "./trained_models/v7_trainsets_ckp-300_XLMRoBERTa_20eps"  # Truyền biến môi trường nếu cần
     restart: always  # Tự động khởi động lại container khi có lỗi

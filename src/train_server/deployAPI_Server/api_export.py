@@ -5,7 +5,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import time
 
 # Configuration
-model_path = "./results/v5_trainsets_checkpoint-140_XLMRoBERTa_10eps"  # Replace xxx with specific checkpoint number
+model_path = "./trained_models/v7_trainsets_ckp-300_XLMRoBERTa_20eps"  # Replace xxx with specific checkpoint number
 tokenizer = AutoTokenizer.from_pretrained("xlm-roberta-base")
 model = AutoModelForSequenceClassification.from_pretrained(model_path)
 
