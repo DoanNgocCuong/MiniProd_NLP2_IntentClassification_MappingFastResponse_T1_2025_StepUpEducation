@@ -13,8 +13,8 @@ RUN pip install -r requirements.txt
 COPY ./api_export.py ./
 
 # Sao chép mô hình từ checkpoint-1288 vào container
-COPY ./results/v5_trainsets_checkpoint-140_XLMRoBERTa_10eps ./results/v5_trainsets_checkpoint-140_XLMRoBERTa_10eps
-COPY ./results/v7_trainsets_ckp-300_XLMRoBERTa_20eps ./results/v7_trainsets_ckp-300_XLMRoBERTa_20eps
+COPY ./trained_models/v5_trainsets_checkpoint-140_XLMRoBERTa_10eps ./trained_models/v5_trainsets_checkpoint-140_XLMRoBERTa_10eps
+COPY ./trained_models/v7_trainsets_ckp-300_XLMRoBERTa_20eps ./trained_models/v7_trainsets_ckp-300_XLMRoBERTa_20eps
 
 # Copy .env vào nhé 
 COPY .env ./
