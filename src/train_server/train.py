@@ -52,7 +52,7 @@ def prepare_dataset(file_path, text_columns, label_column, tokenizer, max_seq_le
 
     return train_dataset, valid_dataset, label2id
 
-file_path = "processed_data_example_v6_15000Data_dang123new_cleaned_data.xlsx"
+file_path = "processed_data_example_v7_v5Update_[VERSION_10EPS_API]_1100Data_updateAfterCheckLog.xlsx"
 text_columns = ["robot", "user_answer"]
 label_column = "user_intent"
 max_seq_length = 128
@@ -73,12 +73,12 @@ def compute_metrics(eval_pred):
     return {"accuracy": acc, "f1": f1}
 
 training_args = TrainingArguments(
-    output_dir="./results",
+    output_dir="./trained_models",
     evaluation_strategy="epoch",
     learning_rate=5e-5,
     per_device_train_batch_size=64,
     per_device_eval_batch_size=64,
-    num_train_epochs=100,
+    num_train_epochs=20,
     weight_decay=0.01,
     logging_dir="./logs",
     logging_steps=10,

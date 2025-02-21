@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 import time
 
 # Cấu hình
-model_path = "deployAPI_server/results/checkpoint-1720_v6data"  # Thay xxx bằng số checkpoint cụ thể, ví dụ checkpoint-500
+model_path = "deployAPI_server/trained_models/checkpoint-1720_v6data"  # Thay xxx bằng số checkpoint cụ thể, ví dụ checkpoint-500
 file_path = "test2_processed_benchmark_1000data123new.xlsx"
 
 text_columns = ["robot", "user_answer"]
