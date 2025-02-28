@@ -100,23 +100,15 @@ def intent_to_fast_response(user_intent: str) -> str:
     
     intent_responses = {
         'intent_positive': [
-            "Sounds great", 
-            "That's interesting", 
-            "Interesting answer", 
-            "That sounds good", 
-            "Câu trả lời này chắc chắn có gì đó rất hay ho, để Pika xem thử nha!", 
-            "Bạn có biết không? Đây là một câu trả lời rất đáng chú ý nha!", 
-            "Hmm, câu này nghe có vẻ hợp lý lắm á!", 
+            "Hmm, câu này nghe có vẻ hợp lý lắm đây!", 
             "Ồ! Câu này có vẻ đúng nha!", 
             "Nghe có vẻ hợp lí phết nha!", 
             "Ồ ồ, có vẻ bạn biết đáp án rồi đó nha!", 
-            "Pika cảm nhận được sự thông minh từ câu trả lời này!", 
             "Chờ Pika chút, để Pika kiểm tra độ chính xác nào!", 
             "Ồ, Pika thấy có gì đó đúng đúng rồi đây!", 
             "Pika sắp bật mí kết quả rồi đây!", 
             "Để xem có gì thú vị không nào!", 
             "Pika đang kiểm tra nè, chờ chút nha!", 
-            "Pika đang lắc não để kiểm tra nè!", 
             "Pika sẽ soi kỹ câu này một chút nha!", 
             "Nghe là thấy có lý rồi nè, để Pika xem thử!", 
             "Bạn có vẻ rất chắc chắn với câu trả lời này hen!", 
@@ -134,9 +126,6 @@ def intent_to_fast_response(user_intent: str) -> str:
         ],
         
         'intent_negative': [
-            "Hmm, got it", 
-            "Hmm, I understand", 
-            "I get what you mean", 
             "Pika cần suy nghĩ thêm một chút về câu này!",
             "Pika cần vài giây để phân tích câu trả lời này!",
             "Pika đang kiểm tra nè, chờ chút nha!",
@@ -168,7 +157,6 @@ def intent_to_fast_response(user_intent: str) -> str:
             "Pika's thinking… thinking… still thinking!",
             "Not quite sure about that one",
             "Great effort! Let's see....",
-            "I see what you mean!",
             "I see what you mean!",
             "Let me think for a sec!",
             "Hang on, let me check!",
@@ -324,23 +312,19 @@ def intent_to_fast_response(user_intent: str) -> str:
             "I'm piecing this together now!",
             "Just a tiny moment longer…",              
         ],
-        
         'silence': [
-            "Hmm, let me think*#*#", 
-            "Hmm, let me see", 
             "Ơ kìa… sao mà yên ắng quá vậy nè?",
             "Sao im re vậy ta? Hay bạn đang bí mật suy nghĩ?",
             "Trời ơi, tự nhiên im lặng làm Pika hồi hộp ghê!",
             "Pika không muốn phải nói chuyện một mình đâu",
-            "Hình như có ai đó đang suy nghĩ thật kỹ nè!",
-            "Ủa, không biết Pika có bỏ lỡ gì không ta?",
-            'Hình như có ai đó đang chơi trò "im lặng là vàng" nè!',
-            "E hèm! Pika gõ cửa nè, có ai ở nhà không?",
-            "Pika có nên giả vờ đoán ý bạn luôn không ta?",
-            "Hình như xung quanh Pika chỉ còn tiếng gió thổi qua thôi nè!",
+            "Hình như có ai đó đang suy nghĩ thật kỹ mà chưa trả lời nè!",
+            "Ủa, sao không ai nói gì. không biết Pika có bỏ lỡ gì không ta?",
+            'Hình như có ai đó đang chơi trò im lặng là vàng nè!',
+            "Chà, không nghe thấy gì. Pika có nên đoán ý bạn luôn không ta?",
+            "Yên ắng quá. Pika chỉ còn tiếng gió thổi qua thôi nè!",
             "Nếu Pika mà biết đọc suy nghĩ thì tốt biết mấy ha!",
             "Đừng lo, Pika sẽ không để sự yên lặng này kéo dài quá lâu đâu!",
-            "Pika nghe thấy… một sự im lặng hoàn hảo!",            
+            "Pika nghe thấy… một sự im lặng hoàn hảo!",
         ]
     }
     #  'intent_fallback': ["Tớ nghĩ chủ đề này không phù hợp lắm*#*#", "Cùng tập trung vào bài học với tớ nhé*#*#"],
@@ -362,14 +346,25 @@ def get_agent_fast_response() -> str:
         "Để Pika kiểm tra nào"  # hoặc bất kỳ câu nào khác trong danh sách
     """
     agent_responses = [
-        "Để Pika kiểm tra nào",
-        "Hmm, để xem...",
-        "Pika đang xử lý...",
-        "Chờ Pika một chút nhé",
-        "Để Pika phân tích thông tin",
-        "Pika đang tính toán...",
-        "Đợi Pika xíu nha",
-        "Pika đang nghĩ...",
+        "Let's see...",
+        "Để xem nào...",
+        "Pika đã nghe thấy rồi đó",
+        "Pika got it!",
+        "Give me a second",
+        "Chờ Pika xíu ha",
+        "Wéo weo wèo",
+        "Ô kê con dê",
+        "Pika đã nghe, Pika đang nghĩ",
+        "Để Pika xử lý một chút nhé.",
+        "Ừm, chờ chút nha!",
+        "U ki, chờ mình một chút!",
+        "Hây da, đợi chút nha, tớ sắp xong rồi!",
+        "Đợi chút, tớ đang tập trung nè!",
+        "Tí tẹo nữa thôi, sắp xong rồi!",
+        "Chờ mình một chút xíu thôi, bạn nhé!",
+        "Tớ nghe rõ rồi nè, chờ tớ xíu nha!",
+        "Xem nào, xem nào… Đừng giục tớ nha!",
+        "wéll well wèll.... What do we have here"
     ]
     return random.choice(agent_responses)
 
