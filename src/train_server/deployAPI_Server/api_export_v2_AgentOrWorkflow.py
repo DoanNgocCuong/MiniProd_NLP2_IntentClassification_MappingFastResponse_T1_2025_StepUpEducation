@@ -6,9 +6,12 @@ import time
 import random  # Thêm import random
 
 # Configuration
-model_path = "./trained_models/v7_trainsets_ckp-300_XLMRoBERTa_20eps"  # Replace xxx with specific checkpoint number
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+model_path = "./trained_models/v7_trainsets_ckp-300_XLMRoBERTa_20eps"
 tokenizer = AutoTokenizer.from_pretrained("xlm-roberta-base")
 model = AutoModelForSequenceClassification.from_pretrained(model_path)
+model.to(device)  # Move model to device once
+model.eval()  # Set model to evaluation mode
 
 print("Model loaded:", model)
 print("Tokenizer loaded:", tokenizer)
@@ -124,7 +127,7 @@ def intent_to_fast_response(user_intent: str) -> str:
             "That sounds like a great answer!",
             "Hmm… this looks good! Let me confirm!",
             "Whoa, let me admire this answer for a second!",
-            "I think I hear a "correct" coming! Wait a sec!", 
+            "I think I hear a 'correct' coming! Wait a sec!", 
             "Hold on! This looks like a great answer!", 
             "Wait, let me process this smart answer!", 
             "Oh wow, that sounded super smart!", 
@@ -331,7 +334,7 @@ def intent_to_fast_response(user_intent: str) -> str:
             "Pika không muốn phải nói chuyện một mình đâu",
             "Hình như có ai đó đang suy nghĩ thật kỹ nè!",
             "Ủa, không biết Pika có bỏ lỡ gì không ta?",
-            "Hình như có ai đó đang chơi trò "im lặng là vàng" nè!",
+            'Hình như có ai đó đang chơi trò "im lặng là vàng" nè!',
             "E hèm! Pika gõ cửa nè, có ai ở nhà không?",
             "Pika có nên giả vờ đoán ý bạn luôn không ta?",
             "Hình như xung quanh Pika chỉ còn tiếng gió thổi qua thôi nè!",
@@ -417,18 +420,14 @@ def predict(data: InputData):
         }
     """
     input_text = prepare_input(data.robot, data.user_answer)
-
-    # Tokenize input
     inputs = tokenizer(input_text, return_tensors="pt", truncation=True, padding=True, max_length=128)
-
-    # Determine device
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    model.to(device)
-
-    # Measure response time
+    
+    # Move inputs to device
+    inputs = {k: v.to(device) for k, v in inputs.items()}
+    
     start_time = time.time()
     with torch.no_grad():
-        outputs = model(**{k: v.to(device) for k, v in inputs.items()})
+        outputs = model(**inputs)  # Model đã ở trên device rồi
     end_time = time.time()
 
     # Process results

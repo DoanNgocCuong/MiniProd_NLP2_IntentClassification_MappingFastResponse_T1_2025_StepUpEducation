@@ -1,0 +1,43 @@
+# Sử dụng image nhẹ hơn với python3.10-slim
+FROM python:3.10-slim
+
+# Thiết lập các biến môi trường để tối ưu Python và pip
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONASYNCIODEBUG=0 \
+    PYTHONOPTIMIZE=2 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Đặt thư mục làm việc
+WORKDIR /app
+
+# Cài đặt các package system cần thiết
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Sao chép và cài đặt requirements trước
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Cài đặt thêm gunicorn và uvicorn
+RUN pip install --no-cache-dir gunicorn uvicorn[standard]
+
+# Sao chép mã nguồn
+COPY ./api_export_v2_AgentOrWorkflow.py ./api_export.py
+
+# Sao chép mô hình
+COPY ./trained_models/v7_trainsets_ckp-300_XLMRoBERTa_20eps ./trained_models/v7_trainsets_ckp-300_XLMRoBERTa_20eps
+
+# Tạo non-root user
+RUN adduser --disabled-password --gecos "" appuser
+USER appuser
+
+# Expose port
+EXPOSE 25041
+
+# Chạy ứng dụng với gunicorn và giới hạn memory
+CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", \
+     "--timeout", "30", "--keep-alive", "5", "--max-requests", "1000", \
+     "-b", "0.0.0.0:25041", "api_export:app"]

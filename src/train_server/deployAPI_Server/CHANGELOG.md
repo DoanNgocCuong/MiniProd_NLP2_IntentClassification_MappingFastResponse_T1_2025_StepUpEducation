@@ -1,3 +1,10 @@
+## Version 1.1: 
+
+## Version 1.2: Bổ sung thêm các câu phản hồi - T2/2025
+
+
+## Version 2: Thay vì dùng chung Agent và Workflow thì tách riêng ra - Cuối t2/2025
+
 Version cũ là mình đang truyền: 
 
 {"robot":"Cậu biết con mèo là gì không?","user_answer":"cat"}

@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  fastapi:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: deploy_FastResponseIntention
+    ports:
+      - "25041:25041"
+    volumes:
+      - ./trained_models:/app/trained_models:ro  # Mount read-only
+    environment:
+      - MODEL_PATH=./trained_models/v7_trainsets_ckp-300_XLMRoBERTa_20eps
+      - WORKERS=4  # Số lượng worker processes
+      - MAX_WORKERS=8  # Số worker tối đa khi scale
+      - TIMEOUT=30  # Timeout cho mỗi request (giây)
+      - KEEP_ALIVE=5  # Giữ connection (giây)
+    deploy:
+      resources:
+        limits:
+          cpus: '4'  # Giới hạn CPU
+          memory: 8G  # Giới hạn RAM
+        reservations:
+          cpus: '2'  # Đảm bảo luôn có 2 CPU
+          memory: 4G  # Đảm bảo luôn có 4GB RAM
+    healthcheck:  # Kiểm tra health của container
+      test: ["CMD", "curl", "-f", "http://localhost:25041/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"  # Giới hạn kích thước file log
+        max-file: "3"    # Số file log tối đa
+    mem_swappiness: 0    # Giảm thiểu sử dụng swap
+    mem_reservation: 4G   # Đảm bảo memory cho container
+    runtime: nvidia      # Sử dụng NVIDIA GPU
+    shm_size: '2gb'      # Shared memory size
+    ulimits:            # System limits
+      nofile:
+        soft: 65536
+        hard: 65536
+    sysctls:            # Kernel parameters
+      net.core.somaxconn: 1024
+      net.ipv4.tcp_max_syn_backlog: 1024
+    networks:
+      - app_network     # Custom network
+
+networks:
+  app_network:
+    driver: bridge
